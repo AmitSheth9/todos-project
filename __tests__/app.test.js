@@ -40,7 +40,7 @@ describe('app routes', () => {
       ];
 
       const data = await fakeRequest(app)
-        .post('/api/animals')
+        .post('/api/todos')
         .send({
           todo: 'read a book',
           completed: false,
@@ -64,7 +64,7 @@ describe('app routes', () => {
       ];
 
       const data = await fakeRequest(app)
-        .get('/api/animals')
+        .get('/api/todos')
         .set('Authorization', token)
         .expect('Content-Type', /json/)
         .expect(200);
@@ -84,7 +84,7 @@ describe('app routes', () => {
       ];
 
       const data = await fakeRequest(app)
-        .put('/api/animals/4')
+        .put('/api/todos/4')
         .send({
           completed: true,
           
