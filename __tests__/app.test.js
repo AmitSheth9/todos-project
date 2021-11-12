@@ -28,35 +28,72 @@ describe('app routes', () => {
       return client.end(done);
     });
 
-    test('returns animals', async() => {
+    test('returns posted toDo', async() => {
 
       const expectation = [
         {
-          'id': 1,
-          'name': 'bessie',
-          'cool_factor': 3,
-          'owner_id': 1
-        },
-        {
-          'id': 2,
-          'name': 'jumpy',
-          'cool_factor': 4,
-          'owner_id': 1
-        },
-        {
-          'id': 3,
-          'name': 'spot',
-          'cool_factor': 10,
-          'owner_id': 1
+          id: expect.any(Number),
+          todo: 'read a book',
+          completed: false,
+          owner_id: expect.any(Number)
         }
       ];
 
       const data = await fakeRequest(app)
-        .get('/animals')
+        .post('/api/todos')
+        .send({
+          todo: 'read a book',
+          completed: false,
+        })
+        .set('Authorization', token)
         .expect('Content-Type', /json/)
         .expect(200);
 
-      expect(data.body).toEqual(expectation);
+      expect(data.body).toEqual(expect.arrayContaining(expectation));
+    });
+
+    test('get data', async() => {
+
+      const expectation = [
+        {
+          id: expect.any(Number),
+          todo: expect.any(String),
+          completed: false,
+          owner_id: expect.any(Number)
+        }
+      ];
+
+      const data = await fakeRequest(app)
+        .get('/api/todos')
+        .set('Authorization', token)
+        .expect('Content-Type', /json/)
+        .expect(200);
+      console.log(data.body);
+      expect(data.body).toEqual(expect.arrayContaining(expectation));
+    });
+
+    test('updates put data', async() => {
+
+      const expectation = [
+        {
+          id: expect.any(Number),
+          todo: expect.any(String),
+          completed: true,
+          owner_id: expect.any(Number)
+        }
+      ];
+
+      const data = await fakeRequest(app)
+        .put('/api/todos/4')
+        .send({
+          completed: true,
+          
+        })
+        .set('Authorization', token)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(data.body).toEqual(expect.arrayContaining(expectation));
     });
   });
 });
